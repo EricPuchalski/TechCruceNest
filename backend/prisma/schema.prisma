@@ -20,7 +20,7 @@ model User {
   id           String        @id @default(uuid())
   name         String?
   email        String        @unique
-  password String?
+  password     String?       @map("passwordHash")
   provider     AuthProvider  @default(local)
   googleId     String?       @unique
   role         UserRole      @default(USER)
@@ -39,7 +39,6 @@ model Product {
   imageUrl             String?
   productUrl           String               @unique
   store                String
-  specs                Json                 @default("{}")
   priceHistory         PriceHistory[]
   hasPriceDropped      Boolean              @default(false)
   active               Boolean              @default(true)
