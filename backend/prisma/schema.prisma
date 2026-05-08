@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum AuthProvider {
+  local
+  google
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String?
+  email        String        @unique
+  password String?
+  provider     AuthProvider  @default(local)
+  googleId     String?       @unique
+  role         UserRole      @default(USER)
+  favorites    Favorite[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("users")
+}
+
+model Product {
+  id                   String               @id @default(uuid())
+  name                 String
+  price                Decimal              @db.Decimal(12, 2)
+  currency             String               @default("ARS")
+  imageUrl             String?
+  productUrl           String               @unique
+  store                String
+  specs                Json                 @default("{}")
+  priceHistory         PriceHistory[]
+  hasPriceDropped      Boolean              @default(false)
+  active               Boolean              @default(true)
+  lastScrapedAt        DateTime             @default(now())
+  lastActivationDate   DateTime?
+  lastDeactivationDate DateTime?
+  favorites            Favorite[]
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+
+  @@index([store])
+  @@index([price])
+  @@index([active])
+  @@index([hasPriceDropped])
+  @@map("products")
+}
+
+model PriceHistory {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  price     Decimal  @db.Decimal(12, 2)
+  currency  String   @default("ARS")
+  date      DateTime @default(now())
+
+  @@index([productId])
+  @@index([date])
+  @@map("price_history")
+}
+
+model Favorite {
+  id                   String    @id @default(uuid())
+  userId               String
+  productId            String
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product              Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  notificationsEnabled Boolean   @default(true)
+  lastNotifiedAt       DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@unique([userId, productId])
+  @@index([productId])
+  @@index([userId])
+  @@map("favorites")
+}
