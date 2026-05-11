@@ -1,0 +1,13 @@
+.grid {
+  width: min(1180px, calc(100vw - 40px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(238px, 1fr));
+  gap: 18px;
+}
+
+@media (max-width: 640px) {
+  .grid {
+    width: min(100vw - 24px, 1180px);
+  }
+}

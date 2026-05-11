@@ -1,0 +1,23 @@
+.emptyState {
+  width: min(1180px, calc(100vw - 40px));
+  margin: 28px auto 0;
+  padding: 38px 24px;
+  display: grid;
+  place-items: center;
+  gap: 14px;
+  text-align: center;
+  border-radius: 22px;
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
+}
+
+.emptyState h3 {
+  margin: 0;
+  color: var(--text-strong);
+}
+
+@media (max-width: 640px) {
+  .emptyState {
+    width: min(100vw - 24px, 1180px);
+  }
+}

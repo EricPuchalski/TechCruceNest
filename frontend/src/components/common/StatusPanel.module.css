@@ -1,0 +1,27 @@
+.panel {
+  width: min(1180px, calc(100vw - 40px));
+  margin: 28px auto 0;
+  padding: 38px 24px;
+  display: grid;
+  place-items: center;
+  gap: 14px;
+  text-align: center;
+  border-radius: 22px;
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
+}
+
+.spinner {
+  width: 46px;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  border: 3px solid rgba(144, 176, 201, 0.16);
+  border-top-color: var(--accent);
+  animation: spin 0.9s linear infinite;
+}
+
+@media (max-width: 640px) {
+  .panel {
+    width: min(100vw - 24px, 1180px);
+  }
+}

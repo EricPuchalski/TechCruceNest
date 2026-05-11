@@ -1,0 +1,207 @@
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background:
+    linear-gradient(135deg, rgba(9, 16, 26, 0.96), rgba(16, 30, 45, 0.96)),
+    rgba(9, 16, 26, 0.92);
+  border-bottom: 1px solid rgba(144, 176, 201, 0.16);
+  backdrop-filter: blur(18px);
+}
+
+.inner {
+  width: min(1180px, calc(100vw - 40px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  min-height: 84px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--text-strong);
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.brandText {
+  display: grid;
+  gap: 0;
+}
+
+.brandText strong {
+  font: 700 1.28rem/1 var(--font-display);
+}
+
+.searchbox {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(132, 153, 179, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.searchbox:focus-within {
+  border-color: rgba(60, 184, 132, 0.7);
+  box-shadow:
+    0 0 0 3px rgba(60, 184, 132, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.searchbox input {
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text-strong);
+  font: 500 0.98rem/1.3 var(--font-body);
+}
+
+.searchbox input::placeholder {
+  color: var(--text-muted);
+}
+
+.searchButton {
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #8df0bb;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    color 140ms ease,
+    opacity 140ms ease;
+}
+
+.searchButton:hover,
+.searchButton:focus-visible {
+  transform: translateY(-1px);
+  color: #b9ffd8;
+  opacity: 1;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.authButtons,
+.accountActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.authButtons :global(.ghost-button) {
+  border: 1px solid #9ff4c2;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.authButtons :global(.ghost-button:hover),
+.authButtons :global(.ghost-button:focus-visible) {
+  background: rgba(159, 244, 194, 0.08);
+}
+
+.identityChip {
+  min-height: 48px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-soft);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 960px) {
+  .inner {
+    grid-template-columns: 1fr;
+    padding: 18px 0;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .authButtons,
+  .accountActions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .authButtons :global(.ghost-button),
+  .authButtons :global(.primary-button) {
+    flex: 1 1 220px;
+  }
+
+  .accountActions :global(.secondary-button) {
+    flex: 0 1 auto;
+  }
+
+  .searchButton {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .inner {
+    width: min(100vw - 24px, 1180px);
+  }
+
+  .authButtons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .authButtons :global(.ghost-button),
+  .authButtons :global(.primary-button) {
+    width: 100%;
+    min-height: 50px;
+    border-radius: 16px;
+  }
+
+  .searchbox {
+    flex-wrap: wrap;
+    padding: 12px 14px;
+  }
+
+  .searchButton {
+    width: auto;
+    min-height: 40px;
+    justify-self: end;
+  }
+
+  .authButtons :global(.ghost-button) {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .accountActions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .identityChip,
+  .accountActions :global(.secondary-button) {
+    width: 100%;
+    justify-content: center;
+  }
+}
