@@ -7,6 +7,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { AuthCookieService } from './auth-cookie.service';
 import { CurrentUser } from './decorators/current-user.decorator';
@@ -23,6 +24,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly authCookieService: AuthCookieService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post('register')
@@ -58,8 +60,12 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(JwtCookieAuthGuard)
-  me(@CurrentUser() user: AuthUser) {
-    return { user };
+  async me(@CurrentUser() user: AuthUser): Promise<AuthResponseDto> {
+    const authenticatedUser = await this.authService.findAuthenticatedUser(
+      user.sub,
+    );
+
+    return { user: authenticatedUser };
   }
 
   @Get('google')
@@ -70,12 +76,20 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   async googleCallback(
     @GoogleUserProfile() googleUser: GoogleUser,
-    @Res({ passthrough: true }) response: Response,
-  ): Promise<AuthResponseDto> {
+    @Res() response: Response,
+  ): Promise<void> {
     const user = await this.authService.validateGoogleUser(googleUser);
+    const frontendUrl = this.getFrontendRedirectUrl();
 
     this.authCookieService.setAuthCookie(response, user);
+    response.redirect(frontendUrl);
+  }
 
-    return { user };
+  private getFrontendRedirectUrl(): string {
+    return (
+      this.configService.get<string>('FRONTEND_URL') ??
+      this.configService.get<string>('CORS_ORIGIN') ??
+      'http://localhost:5173'
+    );
   }
 }

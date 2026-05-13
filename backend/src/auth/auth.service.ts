@@ -56,6 +56,20 @@ export class AuthService {
     return AuthMapper.toAuthenticatedUser(user);
   }
 
+  async findAuthenticatedUser(
+    id: string,
+  ): Promise<AuthenticatedUserResponseDto> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Unauthorized');
+    }
+
+    return AuthMapper.toAuthenticatedUser(user);
+  }
+
   async validateGoogleUser(
     profile: GoogleUser,
   ): Promise<AuthenticatedUserResponseDto> {

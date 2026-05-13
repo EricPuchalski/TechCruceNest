@@ -28,7 +28,7 @@ export class ProductsService {
       this.prisma.product.findMany({
         where,
         select: PRODUCT_LIST_SELECT,
-        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        orderBy: this.buildOrderBy(query),
         skip,
         take: limit,
       }),
@@ -60,6 +60,31 @@ export class ProductsService {
   private buildWhereClause(query: ProductQueryDto): Prisma.ProductWhereInput {
     const where: Prisma.ProductWhereInput = {};
 
+    if (query.search?.trim()) {
+      const searchTerm = query.search.trim();
+
+      where.OR = [
+        {
+          name: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        },
+        {
+          store: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        },
+        {
+          productUrl: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        },
+      ];
+    }
+
     if (query.price !== undefined) {
       where.price = query.price;
     }
@@ -76,5 +101,27 @@ export class ProductsService {
     }
 
     return where;
+  }
+
+  private buildOrderBy(
+    query: ProductQueryDto,
+  ): Prisma.ProductOrderByWithRelationInput[] {
+    switch (query.sortBy) {
+      case 'name':
+        return [{ name: 'asc' }, { id: 'desc' }];
+      case 'priceAsc':
+        return [{ price: 'asc' }, { id: 'desc' }];
+      case 'priceDesc':
+        return [{ price: 'desc' }, { id: 'desc' }];
+      case 'store':
+        return [{ store: 'asc' }, { id: 'desc' }];
+      case 'updatedAt':
+        return [{ updatedAt: 'desc' }, { id: 'desc' }];
+      case 'lastScrapedAt':
+        return [{ lastScrapedAt: 'desc' }, { id: 'desc' }];
+      case 'createdAt':
+      default:
+        return [{ createdAt: 'desc' }, { id: 'desc' }];
+    }
   }
 }

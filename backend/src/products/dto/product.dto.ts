@@ -1,6 +1,7 @@
 import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
@@ -8,7 +9,23 @@ import {
 } from 'class-validator';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 
+export const PRODUCT_SORT_VALUES = [
+  'name',
+  'priceAsc',
+  'priceDesc',
+  'store',
+  'createdAt',
+  'updatedAt',
+  'lastScrapedAt',
+] as const;
+
+export type ProductSort = (typeof PRODUCT_SORT_VALUES)[number];
+
 export class ProductQueryDto extends PaginationDto {
+  @IsOptional()
+  @IsString()
+  search?: string;
+
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
@@ -17,6 +34,10 @@ export class ProductQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   store?: string;
+
+  @IsOptional()
+  @IsIn(PRODUCT_SORT_VALUES)
+  sortBy?: ProductSort;
 
   @IsOptional()
   @IsBoolean()
