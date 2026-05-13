@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
+
+:root {
+  --bg: #071018;
+  --bg-soft: #0d1a27;
+  --panel-dark: rgba(11, 21, 33, 0.92);
+  --panel-dark-muted: rgba(255, 255, 255, 0.04);
+  --panel-dark-border: rgba(144, 176, 201, 0.16);
+  --text-strong-dark: #f5f8fb;
+  --text-soft-dark: #b9c8d8;
+  --text-muted-dark: #88a0b6;
+  --panel-light: #ffffff;
+  --panel-light-muted: #f4f7fb;
+  --panel-light-border: rgba(20, 41, 71, 0.1);
+  --text-strong-light: #162131;
+  --text-soft-light: #59687a;
+  --text-muted-light: #7b8897;
+  --accent: #15744f;
+  --accent-strong: #1d3557;
+  --shadow-soft: 0 18px 44px rgba(18, 31, 52, 0.08);
+  --shadow-dark: 0 18px 44px rgba(2, 8, 15, 0.24);
+  --font-body: 'Instrument Sans', 'Segoe UI Variable Text', sans-serif;
+  --font-display: 'Space Grotesk', 'Segoe UI Variable Display', sans-serif;
+}
