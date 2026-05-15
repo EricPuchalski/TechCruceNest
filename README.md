@@ -36,10 +36,17 @@ El backend está desarrollado con NestJS y PostgreSQL, siguiendo una arquitectur
 - Prisma ORM
 - JWT
 - Bcrypt
-- Nodemailer
+- Resend
 - Cheerio
 - Class Validator
 - Class Transformer
+
+## Variables de entorno para emails
+
+En el backend, para habilitar el aviso de baja de precio por email:
+
+- `RESEND_API_KEY`: API key de Resend.
+- `RESEND_FROM_EMAIL`: remitente a usar. Si no se define, se usa `onboarding@resend.dev`.
 
 ### Frontend
 

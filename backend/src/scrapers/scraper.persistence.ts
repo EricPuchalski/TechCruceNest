@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { PriceDropNotificationService } from '../notifications/price-drop-notification.service';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   ExistingProductUpdateInput,
@@ -22,9 +23,14 @@ export type Product = ProductWithHistory;
 
 @Injectable()
 export class ScraperPersistenceService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly priceDropNotificationService: PriceDropNotificationService,
+  ) {}
 
-  async findProductByUrl(productUrl: string): Promise<ProductWithHistory | null> {
+  async findProductByUrl(
+    productUrl: string,
+  ): Promise<ProductWithHistory | null> {
     return this.prisma.product.findUnique({
       where: { productUrl },
       include: PRODUCT_WITH_HISTORY_INCLUDE,
@@ -53,7 +59,13 @@ export class ScraperPersistenceService {
         lastScrapedAt: params.now,
         lastActivationDate: params.now,
         priceHistory: {
-          create: [this.buildPriceHistoryEntry(params.price, params.currency, params.now)],
+          create: [
+            this.buildPriceHistoryEntry(
+              params.price,
+              params.currency,
+              params.now,
+            ),
+          ],
         },
       },
       include: PRODUCT_WITH_HISTORY_INCLUDE,
@@ -87,17 +99,39 @@ export class ScraperPersistenceService {
     if (lastPriceNumber === null || lastPriceNumber !== params.price) {
       updateData.price = params.price;
       updateData.priceHistory = {
-        create: [this.buildPriceHistoryEntry(params.price, currency, params.now)],
+        create: [
+          this.buildPriceHistoryEntry(params.price, currency, params.now),
+        ],
       };
     } else {
       updateData.price = params.price;
     }
 
-    return this.prisma.product.update({
+    const updatedProduct = await this.prisma.product.update({
       where: { id: product.id },
       data: updateData,
       include: PRODUCT_WITH_HISTORY_INCLUDE,
     });
+
+    if (
+      priceDropped &&
+      lastPriceNumber !== null &&
+      lastPriceNumber !== params.price
+    ) {
+      await this.priceDropNotificationService.notifyInterestedUsers({
+        productId: updatedProduct.id,
+        productName: updatedProduct.name,
+        productUrl: updatedProduct.productUrl,
+        imageUrl: updatedProduct.imageUrl,
+        store: updatedProduct.store,
+        currency,
+        previousPrice: lastPriceNumber,
+        currentPrice: params.price,
+        notifiedAt: params.now,
+      });
+    }
+
+    return updatedProduct;
   }
 
   async deactivateMissingProducts(
