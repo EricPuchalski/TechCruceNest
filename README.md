@@ -36,7 +36,7 @@ El backend está desarrollado con NestJS y PostgreSQL, siguiendo una arquitectur
 - Prisma ORM
 - JWT
 - Bcrypt
-- Nodemailer
+- Resend
 - Cheerio
 - Class Validator
 - Class Transformer
