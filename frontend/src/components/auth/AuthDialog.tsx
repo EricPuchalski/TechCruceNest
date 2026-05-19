@@ -164,12 +164,14 @@ function AuthDialog({
                 : "Crear cuenta"}
           </button>
 
-          {mode === "sign-in" ? (
-            <a className={styles.googleButton} href={GOOGLE_AUTH_URL}>
-              <GoogleLogo />
-              <span>Continuar con Google</span>
-            </a>
-          ) : null}
+          <a className={styles.googleButton} href={GOOGLE_AUTH_URL}>
+            <GoogleLogo />
+            <span>
+              {mode === "sign-in"
+                ? "Continuar con Google"
+                : "Crear cuenta con Google"}
+            </span>
+          </a>
         </form>
 
         <div className={styles.footer}>
